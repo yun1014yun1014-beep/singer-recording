@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>歌手資料庫｜錄音</title>
+
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", sans-serif;
+  padding: 24px;
+  background: #f7f4ff;
+  color: #333;
+}
+
+h1 {
+  color: #6b4bb8;
+}
+
+input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 12px;
+  border: 0;
+  border-radius: 12px;
+  font-size: 17px;
+  background: #7b5cc7;
+  color: white;
+}
+
+button:disabled {
+  background: #aaa;
+}
+
+#status {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 16px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎙️ 歌手資料庫錄音</h1>
+
+<input id="singer" placeholder="歌手名稱">
+<input id="song" placeholder="歌曲名稱">
+<input id="recorder" placeholder="錄音者名稱">
+
+<button id="startBtn" onclick="startRecording()">
+🎙️ 開始錄音
+</button>
+
+<div id="status">最長錄音時間：20 秒</div>
+
+<script>
+
+let recorder;
+let chunks = [];
+let timer;
+
+function startRecording() {
+
+  const singer = document.getElementById("singer").value.trim();
+  const song = document.getElementById("song").value.trim();
+  const recorderName = document.getElementById("recorder").value.trim();
+
+  if (!singer || !song || !recorderName) {
+    alert("請先填寫歌手、歌曲和錄音者名稱！");
+    return;
+  }
+
+  navigator.mediaDevices.getUserMedia({ audio: true })
+    .then(stream => {
+
+      chunks = [];
+
+      let mimeType = "";
+
+      if (MediaRecorder.isTypeSupported("audio/mp4")) {
+        mimeType = "audio/mp4";
+      } else if (MediaRecorder.isTypeSupported("audio/webm")) {
+        mimeType = "audio/webm";
+      }
+
+      recorder = mimeType
+        ? new MediaRecorder(stream, { mimeType })
+        : new MediaRecorder(stream);
+
+      recorder.ondataavailable = event => {
+        if (event.data.size > 0) {
+          chunks.push(event.data);
+        }
+      };
+
+      recorder.onstop = () => {
+
+        stream.getTracks().forEach(track => track.stop());
+
+        const blob = new Blob(chunks, {
+          type: recorder.mimeType || "audio/mp4"
+        });
+
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+
+          const dataUrl = reader.result;
+
+          document.getElementById("status").innerText =
+            "⏳ 正在準備上傳……";
+
+          sendRecording(
+            dataUrl,
+            singer,
+            song,
+            recorderName
+          );
+        };
+
+        reader.readAsDataURL(blob);
+      };
+
+      recorder.start();
+
+      document.getElementById("startBtn").disabled = true;
+
+      let seconds = 0;
+
+      document.getElementById("status").innerText =
+        "🔴 錄音中：0 / 20 秒";
+
+      timer = setInterval(() => {
+
+        seconds++;
+
+        document.getElementById("status").innerText =
+          "🔴 錄音中：" + seconds + " / 20 秒";
+
+        if (seconds >= 20) {
+          stopRecording();
+        }
+
+      }, 1000);
+
+    })
+    .catch(error => {
+
+      alert(
+        "無法使用麥克風。\n\n請確認 Safari 已允許這個網站使用麥克風。"
+      );
+
+      console.error(error);
+    });
+}
+
+function stopRecording() {
+
+  clearInterval(timer);
+
+  if (recorder && recorder.state === "recording") {
+    recorder.stop();
+  }
+
+  document.getElementById("startBtn").disabled = false;
+}
+
+function sendRecording(dataUrl, singer, song, recorderName) {
+
+  /*
+    這裡下一步會接上你的 Google Apps Script
+    目前先不要修改這裡。
+  */
+
+  document.getElementById("status").innerText =
+    "✅ 錄音完成！";
+}
+
+</script>
+
+</body>
+</html>
