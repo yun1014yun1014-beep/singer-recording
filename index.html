@@ -80,7 +80,7 @@ function startRecording() {
     alert("請先填寫歌手、歌曲和錄音者名稱！");
     return;
   }
-
+alert("準備開啟麥克風");
   navigator.mediaDevices.getUserMedia({ audio: true })
     .then(stream => {
 
