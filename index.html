@@ -181,6 +181,7 @@ function sendRecording(dataUrl, singer, song, recorderName) {
     "https://script.google.com/macros/s/AKfycbzMO0D-Qd6reE74-NZSrLQanj-FI0UdnA2sK_lcNCz5R9KIIEYSchLvJFRsbva8rvbE2w/exec";
 
   fetch(url, {
+    mode: "no-cors",
     method: "POST",
     body: new URLSearchParams({
       dataUrl: dataUrl,
