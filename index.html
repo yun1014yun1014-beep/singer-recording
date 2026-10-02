@@ -1,480 +1,559 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-
 <head>
-
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
-
-  <title>🎙️ 歌手資料庫錄音</title>
+  <title>歌手錄音</title>
 
   <style>
-
     * {
       box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      padding: 20px;
-
+      background: #f7f3fb;
       font-family:
         -apple-system,
         BlinkMacSystemFont,
         "PingFang TC",
-        "Noto Sans TC",
+        "Microsoft JhengHei",
         sans-serif;
-
-      background: #f7f3ff;
       color: #333;
     }
 
     .container {
-      max-width: 520px;
-      margin: 0 auto;
-
-      background: white;
-
-      border-radius: 24px;
-
-      padding: 28px 20px 30px;
-
-      box-shadow:
-        0 8px 30px rgba(0,0,0,0.08);
+      max-width: 600px;
+      margin: auto;
+      padding: 25px 18px;
     }
 
     h1 {
       text-align: center;
-
-      margin:
-        5px 0 8px;
-
-      color: #7b4bb7;
-
-      font-size: 27px;
+      color: #7048a8;
+      margin-bottom: 8px;
     }
 
     .subtitle {
       text-align: center;
-
       color: #888;
+      margin-bottom: 25px;
+    }
 
-      font-size: 14px;
-
-      margin-bottom: 28px;
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 18px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.07);
     }
 
     label {
       display: block;
-
-      margin-top: 16px;
-      margin-bottom: 7px;
-
-      font-weight: 600;
-
+      margin-top: 14px;
+      margin-bottom: 6px;
+      font-weight: bold;
       color: #555;
     }
 
     input {
       width: 100%;
-
-      padding: 14px;
-
-      border:
-        1px solid #ddd;
-
-      border-radius: 13px;
-
+      padding: 13px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
       font-size: 16px;
-
       outline: none;
-
-      background: #fafafa;
     }
 
-    input:focus {
-      border-color: #8b5cc7;
-
-      background: white;
-    }
-
-    #startBtn {
+    button {
       width: 100%;
-
-      margin-top: 26px;
-
-      padding: 16px;
-
       border: none;
-
-      border-radius: 15px;
-
-      background: #8b5cc7;
-
-      color: white;
-
-      font-size: 18px;
-
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 16px;
+      font-size: 16px;
       font-weight: bold;
     }
 
-    #startBtn:disabled {
-      background: #aaa;
+    #startBtn {
+      background: #7048a8;
+      color: white;
     }
 
-    #status {
-      margin-top: 18px;
+    #stopBtn {
+      background: #d9c9e8;
+      color: #54356f;
+    }
 
-      padding: 14px;
+    #uploadBtn {
+      background: #8b5fbf;
+      color: white;
+    }
 
-      min-height: 48px;
+    button:disabled {
+      opacity: 0.45;
+    }
 
-      border-radius: 13px;
-
-      background: #f3eef9;
-
-      color: #666;
-
+    .timer {
       text-align: center;
-
-      font-size: 14px;
-
-      display: flex;
-
-      align-items: center;
-
-      justify-content: center;
+      font-size: 28px;
+      font-weight: bold;
+      color: #7048a8;
+      margin: 22px 0 5px;
     }
 
-    .notice {
+    .status {
+      text-align: center;
       margin-top: 18px;
-
-      padding: 14px;
-
-      border-radius: 13px;
-
-      background: #fff8e8;
-
-      color: #806b38;
-
-      font-size: 13px;
-
-      line-height: 1.7;
+      line-height: 1.6;
+      color: #666;
     }
 
+    audio {
+      width: 100%;
+      margin-top: 18px;
+    }
+
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #7048a8;
+      text-decoration: none;
+    }
   </style>
-
 </head>
-
 
 <body>
 
-
 <div class="container">
 
-  <h1>🎙️ 歌手資料庫錄音</h1>
+  <h1>🎙️ 歌手錄音</h1>
 
   <div class="subtitle">
-    錄下你的版本，和大家一起收藏
+    錄下你的歌曲並儲存
   </div>
 
+  <div class="box">
 
-  <label for="singer">
-    歌手
-  </label>
+    <label>歌手</label>
+    <input
+      id="singer"
+      type="text"
+      placeholder="例如：周杰倫"
+    >
 
-  <input
-    id="singer"
-    type="text"
-    placeholder="例如：周杰倫"
-    autocomplete="off"
-  >
+    <label>歌名</label>
+    <input
+      id="song"
+      type="text"
+      placeholder="例如：晴天"
+    >
 
+    <label>錄音者</label>
+    <input
+      id="recorder"
+      type="text"
+      placeholder="輸入你的名字"
+    >
 
-  <label for="song">
-    歌曲
-  </label>
+    <div
+      id="timer"
+      class="timer"
+    >
+      00:00
+    </div>
 
-  <input
-    id="song"
-    type="text"
-    placeholder="例如：稻香"
-    autocomplete="off"
-  >
+    <button
+      id="startBtn"
+      onclick="startRecording()"
+    >
+      🎙️ 開始錄音
+    </button>
 
+    <button
+      id="stopBtn"
+      onclick="stopRecording()"
+      disabled
+    >
+      ⏹️ 結束錄音
+    </button>
 
-  <label for="recorder">
-    錄音者
-  </label>
+    <audio
+      id="audio"
+      controls
+      style="display:none;"
+    ></audio>
 
-  <input
-    id="recorder"
-    type="text"
-    placeholder="輸入你的名字"
-    autocomplete="off"
-  >
+    <button
+      id="uploadBtn"
+      onclick="uploadRecording()"
+      disabled
+    >
+      ☁️ 上傳錄音
+    </button>
 
+    <div
+      id="status"
+      class="status"
+    >
+      填好資料後即可開始錄音
+    </div>
 
-  <button
-    id="startBtn"
-    onclick="startRecording()"
-  >
-    🎙️ 開始錄音
-  </button>
-
-
-  <div id="status">
-    錄音最多 20 秒
   </div>
 
-
-  <div class="notice">
-
-    📌 錄音最多 20 秒。<br>
-
-    📌 錄音完成後會自動上傳。<br>
-
-    📌 請先確認 Safari 已允許使用麥克風。
-
-  </div>
+  <a
+    class="back"
+    href="https://script.google.com/"
+  >
+    ← 返回
+  </a>
 
 </div>
 
 
 <script>
 
+  // ==========================================
+  // Google Apps Script 上傳網址
+  // ==========================================
 
-/* =========================================
-   Google Apps Script 網址
-========================================= */
-
-const UPLOAD_URL =
-  "https://script.google.com/macros/s/AKfycbzMO0D-Qd6reE74-NZSrLQanj-FI0UdnA2sK_lcNCz5R9KIIEYSchLvJFRsbva8rvbE2w/exec";
-
-
-/* =========================================
-   錄音變數
-========================================= */
-
-let recorder = null;
-
-let chunks = [];
-
-let timer = null;
-
-let seconds = 0;
+  const UPLOAD_URL =
+    "https://script.google.com/macros/s/AKfycbzMO0D-Qd6reE74-NZSrLQanj-FI0UdnA2sK_lcNCz5R9KIIEYSchLvJFRsbva8rvbE2w/exec";
 
 
-/* =========================================
-   開始錄音
-========================================= */
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let audioBlob = null;
 
-async function startRecording() {
-
-  const singer =
-    document
-      .getElementById("singer")
-      .value
-      .trim();
-
-  const song =
-    document
-      .getElementById("song")
-      .value
-      .trim();
-
-  const recorderName =
-    document
-      .getElementById("recorder")
-      .value
-      .trim();
-
-  const status =
-    document.getElementById("status");
-
-  const button =
-    document.getElementById("startBtn");
+  let timerInterval = null;
+  let seconds = 0;
 
 
-  /* 檢查輸入 */
+  // ==========================================
+  // 開始錄音
+  // ==========================================
 
-  if (
-    !singer ||
-    !song ||
-    !recorderName
-  ) {
+  async function startRecording() {
 
-    alert(
-      "請先填寫歌手、歌曲和錄音者名稱！"
-    );
+    const singer =
+      document.getElementById("singer").value.trim();
 
-    return;
-  }
+    const song =
+      document.getElementById("song").value.trim();
 
-
-  /* 檢查麥克風 */
-
-  if (
-    !navigator.mediaDevices ||
-    !navigator.mediaDevices.getUserMedia
-  ) {
-
-    status.innerText =
-      "❌ 此瀏覽器無法使用麥克風";
-
-    return;
-  }
+    const recorder =
+      document.getElementById("recorder").value.trim();
 
 
-  /* 檢查錄音功能 */
+    if (!singer || !song || !recorder) {
 
-  if (!window.MediaRecorder) {
+      setStatus(
+        "⚠️ 請先填寫歌手、歌名和錄音者。"
+      );
 
-    status.innerText =
-      "❌ 此瀏覽器不支援錄音";
-
-    return;
-  }
-
-
-  try {
-
-    status.innerText =
-      "🎙️ 正在開啟麥克風……";
+      return;
+    }
 
 
-    /* 要求麥克風權限 */
+    try {
 
-    const stream =
-      await navigator
-        .mediaDevices
-        .getUserMedia({
+      const stream =
+        await navigator.mediaDevices.getUserMedia({
           audio: true
         });
 
 
-    /* =====================================
-       選擇 iPhone 可以使用的音訊格式
-    ===================================== */
+      audioChunks = [];
 
-    const formats = [
-
-      "audio/mp4",
-
-      "audio/webm;codecs=opus",
-
-      "audio/webm"
-
-    ];
+      audioBlob = null;
 
 
-    let mimeType = "";
+      mediaRecorder =
+        new MediaRecorder(stream, {
+          mimeType: getSupportedMimeType()
+        });
 
 
-    if (
-      typeof MediaRecorder.isTypeSupported ===
-      "function"
-    ) {
+      mediaRecorder.ondataavailable =
+        function(event) {
 
-      for (
-        const format of formats
-      ) {
-
-        if (
-          MediaRecorder
-            .isTypeSupported(format)
-        ) {
-
-          mimeType = format;
-
-          break;
-        }
-      }
-    }
-
-
-    /* 建立錄音器 */
-
-    if (mimeType) {
-
-      recorder =
-        new MediaRecorder(
-          stream,
-          {
-            mimeType: mimeType
+          if (event.data.size > 0) {
+            audioChunks.push(event.data);
           }
+
+        };
+
+
+      mediaRecorder.onstop =
+        function() {
+
+          audioBlob =
+            new Blob(
+              audioChunks,
+              {
+                type:
+                  mediaRecorder.mimeType ||
+                  "audio/webm"
+              }
+            );
+
+
+          const audio =
+            document.getElementById("audio");
+
+
+          audio.src =
+            URL.createObjectURL(audioBlob);
+
+          audio.style.display = "block";
+
+
+          document.getElementById("uploadBtn")
+            .disabled = false;
+
+
+          setStatus(
+            "✅ 錄音完成，可以播放或上傳。"
+          );
+
+        };
+
+
+      mediaRecorder.start();
+
+      stream.getTracks().forEach(
+        track => {
+          track.addEventListener(
+            "ended",
+            function() {}
+          );
+        }
+      );
+
+
+      document.getElementById("startBtn")
+        .disabled = true;
+
+      document.getElementById("stopBtn")
+        .disabled = false;
+
+      document.getElementById("uploadBtn")
+        .disabled = true;
+
+
+      seconds = 0;
+
+      updateTimer();
+
+
+      timerInterval =
+        setInterval(
+          updateTimer,
+          1000
         );
 
-    } else {
 
-      recorder =
-        new MediaRecorder(stream);
+      setStatus(
+        "🔴 正在錄音……最多 20 秒"
+      );
+
+
+      // 最長 20 秒
+
+      setTimeout(
+        function() {
+
+          if (
+            mediaRecorder &&
+            mediaRecorder.state === "recording"
+          ) {
+            stopRecording();
+          }
+
+        },
+        20000
+      );
+
+
+    } catch (error) {
+
+      setStatus(
+        "❌ 無法使用麥克風。請確認 Safari 已允許此網站使用麥克風。"
+      );
+
+    }
+
+  }
+
+
+  // ==========================================
+  // 結束錄音
+  // ==========================================
+
+  function stopRecording() {
+
+    if (
+      !mediaRecorder ||
+      mediaRecorder.state !== "recording"
+    ) {
+      return;
     }
 
 
-    chunks = [];
+    mediaRecorder.stop();
 
 
-    /* 收集錄音 */
+    document.getElementById("startBtn")
+      .disabled = false;
 
-    recorder.ondataavailable =
-      function(event) {
+    document.getElementById("stopBtn")
+      .disabled = true;
 
-        if (
-          event.data &&
-          event.data.size > 0
-        ) {
 
-          chunks.push(event.data);
+    clearInterval(timerInterval);
+
+    document
+      .getElementById("timer")
+      .textContent = formatTime(seconds);
+
+  }
+
+
+  // ==========================================
+  // 上傳錄音
+  // ==========================================
+
+  async function uploadRecording() {
+
+    if (!audioBlob) {
+
+      setStatus(
+        "⚠️ 目前沒有錄音。"
+      );
+
+      return;
+    }
+
+
+    const singer =
+      document.getElementById("singer").value.trim();
+
+    const song =
+      document.getElementById("song").value.trim();
+
+    const recorder =
+      document.getElementById("recorder").value.trim();
+
+
+    if (!singer || !song || !recorder) {
+
+      setStatus(
+        "⚠️ 請確認資料都已填寫。"
+      );
+
+      return;
+    }
+
+
+    const uploadBtn =
+      document.getElementById("uploadBtn");
+
+
+    uploadBtn.disabled = true;
+
+
+    setStatus(
+      "☁️ 正在上傳錄音，請稍候……"
+    );
+
+
+    try {
+
+      const dataUrl =
+        await blobToDataURL(audioBlob);
+
+
+      const fileName =
+        sanitizeFileName(
+          singer +
+          "_" +
+          song +
+          "_" +
+          recorder +
+          "_" +
+          Date.now() +
+          ".webm"
+        );
+
+
+      const formData =
+        new URLSearchParams();
+
+
+      formData.append(
+        "dataUrl",
+        dataUrl
+      );
+
+      formData.append(
+        "fileName",
+        fileName
+      );
+
+      formData.append(
+        "singer",
+        singer
+      );
+
+      formData.append(
+        "song",
+        song
+      );
+
+      formData.append(
+        "recorder",
+        recorder
+      );
+
+
+      await fetch(
+        UPLOAD_URL,
+        {
+          method: "POST",
+          mode: "no-cors",
+          body: formData
         }
-
-      };
-
-
-    /* 錄音結束 */
-
-    recorder.onstop =
-      function() {
-
-        clearInterval(timer);
+      );
 
 
-        /* 關閉麥克風 */
-
-        stream
-          .getTracks()
-          .forEach(
-            function(track) {
-
-              track.stop();
-
-            }
-          );
+      setStatus(
+        "✅ 錄音已送出！"
+      );
 
 
-        /* 建立音檔 */
+    } catch (error) {
 
-        const blob =
-          new Blob(
-            chunks,
-            {
-              type:
-                recorder.mimeType ||
-                mimeType ||
-                "audio/mp4"
-            }
-          );
+      uploadBtn.disabled = false;
 
+      setStatus(
+        "❌ 上傳失敗：" +
+        error.message
+      );
 
-        status.innerText =
-          "⌛ 正在準備上傳……";
+    }
+
+  }
 
 
-        /* 轉成 Base64 */
+  // ==========================================
+  // Blob → Base64
+  // ==========================================
+
+  function blobToDataURL(blob) {
+
+    return new Promise(
+      function(resolve, reject) {
 
         const reader =
           new FileReader();
@@ -482,350 +561,111 @@ async function startRecording() {
 
         reader.onloadend =
           function() {
-
-            sendRecording(
-              reader.result,
-              singer,
-              song,
-              recorderName,
-              blob.type
-            );
-
+            resolve(reader.result);
           };
+
+
+        reader.onerror =
+          reject;
 
 
         reader.readAsDataURL(blob);
 
-      };
+      }
+    );
+
+  }
 
 
-    /* 錄音發生錯誤 */
+  // ==========================================
+  // 找瀏覽器支援的錄音格式
+  // ==========================================
 
-    recorder.onerror =
-      function(event) {
+  function getSupportedMimeType() {
 
-        console.error(event);
-
-        button.disabled = false;
-
-        status.innerText =
-          "❌ 錄音發生錯誤";
-
-      };
-
-
-    /* 開始 */
-
-    recorder.start(250);
-
-    button.disabled = true;
-
-    seconds = 0;
+    const types = [
+      "audio/webm;codecs=opus",
+      "audio/webm",
+      "audio/mp4",
+      "audio/ogg;codecs=opus"
+    ];
 
 
-    status.innerText =
-      "🔴 錄音中：0 / 20 秒";
+    for (const type of types) {
 
-
-    /* 計時 */
-
-    timer =
-      setInterval(
-        function() {
-
-          seconds++;
-
-
-          status.innerText =
-            "🔴 錄音中：" +
-            seconds +
-            " / 20 秒";
-
-
-          /* 20 秒自動停止 */
-
-          if (
-            seconds >= 20
-          ) {
-
-            stopRecording();
-
-          }
-
-        },
-        1000
-      );
-
-
-  } catch (error) {
-
-    console.error(error);
-
-    button.disabled = false;
-
-
-    if (
-      error.name ===
-      "NotAllowedError"
-    ) {
-
-      status.innerText =
-        "❌ 麥克風權限被拒絕";
+      if (
+        MediaRecorder.isTypeSupported(type)
+      ) {
+        return type;
+      }
 
     }
 
-    else if (
-      error.name ===
-      "NotFoundError"
-    ) {
 
-      status.innerText =
-        "❌ 找不到麥克風";
-
-    }
-
-    else {
-
-      status.innerText =
-        "❌ 麥克風啟動失敗：" +
-        (
-          error.name ||
-          error.message ||
-          "未知錯誤"
-        );
-
-    }
-
-  }
-
-}
-
-
-/* =========================================
-   停止錄音
-========================================= */
-
-function stopRecording() {
-
-  clearInterval(timer);
-
-
-  if (
-    recorder &&
-    recorder.state ===
-    "recording"
-  ) {
-
-    recorder.stop();
-
-  }
-
-}
-
-
-/* =========================================
-   上傳錄音
-========================================= */
-
-function sendRecording(
-  dataUrl,
-  singer,
-  song,
-  recorderName,
-  mimeType
-) {
-
-  const status =
-    document.getElementById("status");
-
-  const button =
-    document.getElementById("startBtn");
-
-
-  status.innerText =
-    "☁️ 正在上傳錄音……";
-
-
-  /* =====================================
-     判斷副檔名
-  ===================================== */
-
-  let extension = "mp4";
-
-
-  if (
-    mimeType &&
-    mimeType.includes("webm")
-  ) {
-
-    extension = "webm";
+    return "";
 
   }
 
 
-  /* 檔名 */
+  // ==========================================
+  // 計時
+  // ==========================================
 
-  const fileName =
-    singer +
-    "_" +
-    song +
-    "_" +
-    recorderName +
-    "." +
-    extension;
+  function updateTimer() {
 
+    document
+      .getElementById("timer")
+      .textContent =
+      formatTime(seconds);
 
-  /* =====================================
-     建立隱藏 iframe
-  ===================================== */
+    seconds++;
 
-  let iframe =
-    document.getElementById(
-      "uploadFrame"
-    );
+  }
 
 
-  if (!iframe) {
+  function formatTime(totalSeconds) {
 
-    iframe =
-      document.createElement(
-        "iframe"
-      );
+    const minutes =
+      Math.floor(totalSeconds / 60);
 
-    iframe.id =
-      "uploadFrame";
+    const secs =
+      totalSeconds % 60;
 
-    iframe.name =
-      "uploadFrame";
 
-    iframe.style.display =
-      "none";
-
-    document.body.appendChild(
-      iframe
+    return (
+      String(minutes).padStart(2, "0") +
+      ":" +
+      String(secs).padStart(2, "0")
     );
 
   }
 
 
-  /* =====================================
-     建立表單
-  ===================================== */
+  // ==========================================
+  // 狀態文字
+  // ==========================================
 
-  const form =
-    document.createElement(
-      "form"
-    );
+  function setStatus(text) {
 
-
-  form.method =
-    "POST";
-
-
-  form.action =
-    UPLOAD_URL;
-
-
-  form.target =
-    "uploadFrame";
-
-
-  form.style.display =
-    "none";
-
-
-  /* =====================================
-     建立資料欄位
-  ===================================== */
-
-  const fields = {
-
-    dataUrl:
-      dataUrl,
-
-    fileName:
-      fileName,
-
-    singer:
-      singer,
-
-    song:
-      song,
-
-    recorder:
-      recorderName
-
-  };
-
-
-  for (
-    const key in fields
-  ) {
-
-    const input =
-      document.createElement(
-        "input"
-      );
-
-
-    input.type =
-      "hidden";
-
-
-    input.name =
-      key;
-
-
-    input.value =
-      fields[key];
-
-
-    form.appendChild(
-      input
-    );
+    document
+      .getElementById("status")
+      .textContent = text;
 
   }
 
 
-  /* 加入頁面 */
+  // ==========================================
+  // 檔名處理
+  // ==========================================
 
-  document.body.appendChild(
-    form
-  );
+  function sanitizeFileName(name) {
 
+    return name
+      .replace(/[\\/:*?"<>|]/g, "_");
 
-  /* =====================================
-     真正送出 POST
-  ===================================== */
-
-  form.submit();
-
-
-  /* =====================================
-     顯示結果
-  ===================================== */
-
-  setTimeout(
-    function() {
-
-      status.innerText =
-        "✅ 錄音已送出！";
-
-      button.disabled =
-        false;
-
-
-      form.remove();
-
-    },
-    3000
-  );
-
-}
-
+  }
 
 </script>
 
 </body>
-
 </html>
