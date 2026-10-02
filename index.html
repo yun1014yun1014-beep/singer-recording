@@ -175,17 +175,32 @@ function stopRecording() {
 
   document.getElementById("startBtn").disabled = false;
 }
-
 function sendRecording(dataUrl, singer, song, recorderName) {
 
-  /*
-    這裡下一步會接上你的 Google Apps Script
-    目前先不要修改這裡。
-  */
+  const url =
+    "https://script.google.com/macros/s/AKfycbzMO0D-Qd6reE74-NZSrLQanj-FI0UdnA2sK_lcNCz5R9KIIEYSchLvJFRsbva8rvbE2w/exec";
 
-  document.getElementById("status").innerText =
-    "✅ 錄音完成！";
+  fetch(url, {
+    method: "POST",
+    body: new URLSearchParams({
+      dataUrl: dataUrl,
+      fileName: singer + "_" + song + "_" + recorderName + ".webm",
+      singer: singer,
+      song: song,
+      recorder: recorderName
+    })
+  })
+  .then(() => {
+    document.getElementById("status").innerText =
+      "✅ 錄音完成！";
+  })
+  .catch(error => {
+    console.error(error);
+    document.getElementById("status").innerText =
+      "❌ 錄音上傳失敗";
+  });
 }
+
 
 </script>
 
